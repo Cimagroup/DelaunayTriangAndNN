@@ -2,13 +2,13 @@
 """
 Created on Wed May 26 09:19:50 2021
 
-@author: Eduardo
+@author: Eduardo Paluzo-Hidalgo
 """
 from scipy.spatial import Delaunay
 import numpy as np
 import itertools 
 
-def barycentric(delaunay,points,k): # k=id simplice
+def barycentric(delaunay,points,k): # k=id simplex
     n = len(points[0])
     b = delaunay.transform[k,:n].dot(np.transpose(points - delaunay.transform[k,n]))
     return np.c_[np.transpose(b), 1 - b.sum(axis=0)]
@@ -100,23 +100,18 @@ def nn(dataset,p):
     ls.append(c)
     for i in range(n):
         ls.append(d[i])
-    l = Delaunay(ls) # COMPLEJO L
-    b=barycentric(k,p,k.find_simplex(p)[0]) # BARICENTRICAS DE P EN K
+    l = Delaunay(ls) 
+    b=barycentric(k,p,k.find_simplex(p)[0]) 
     image = classes[k.simplices[k.find_simplex(p)]][0] 
-    # TOMAMOS LAS BARICENTRICAS RESPECTO UNO DE LOS SIMPLICES 
-    # A LOS QUE PERTENECE P, ES DECIR, COORDENADAS BARICÉNTRICAS POSITIVAS.
-    # VERTICES IMAGEN DEL SIMPLICE QUE CONTIENE A P EN K
     f=b.dot(l.points[image])
-    # CARTESIANAS IMAGEN DE P EN L
-    return  barycentric(l,f,0) # BARICÉNTRICAS DE P EN L
+    return  barycentric(l,f,0) 
 
 
 
 def nn_simplified(dataset,p):
-    data = dataset[0] # LOS PUNTOS
-    classes = dataset[1] # CLASES
-    k = Delaunay(data) # COMPLEJO K
-    ## SIMPLIFICACIÓN
+    data = dataset[0] 
+    classes = dataset[1] 
+    k = Delaunay(data) 
     pairs = zip(classes[k.simplices],k.simplices)
     triangulos=[y for (x,y) in pairs if len(set(x))!=1]
     k.simplices=np.array(triangulos)
@@ -131,14 +126,10 @@ def nn_simplified(dataset,p):
     for i in range(n):
         ls.append(d[i])
     l = Delaunay(ls) # COMPLEJO L
-    b=barycentric(k,p,k.find_simplex(p)[0]) # BARICENTRICAS DE P EN K   
+    b=barycentric(k,p,k.find_simplex(p)[0]) 
     image = classes_simp[k.simplices[k.find_simplex(p)]][0] 
-    # TOMAMOS LAS BARICENTRICAS RESPECTO UNO DE LOS SIMPLICES 
-    # A LOS QUE PERTENECE P, ES DECIR, COORDENADAS BARICÉNTRICAS POSITIVAS.
-    # VERTICES IMAGEN DEL SIMPLICE QUE CONTIENE A P EN K
     f=b.dot(l.points[image])
-    # CARTESIANAS IMAGEN DE P EN L
-    return  barycentric(l,f,0) # BARICÉNTRICAS DE P EN L
+    return  barycentric(l,f,0) 
 
 
 
