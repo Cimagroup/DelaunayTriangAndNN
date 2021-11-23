@@ -90,9 +90,9 @@ def bar_subd_complex(simp_complex,puntos):
 
 
 def nn(dataset,p):
-    data = dataset[0] # LOS PUNTOS
-    classes = dataset[1] # CLASES
-    k = Delaunay(data) # COMPLEJO K
+    data = dataset[0] # Points
+    classes = dataset[1] # Classes
+    k = Delaunay(data) # Complex K
     n = len(set(classes))
     c=np.zeros(n)
     d=np.diag(np.ones(n))
